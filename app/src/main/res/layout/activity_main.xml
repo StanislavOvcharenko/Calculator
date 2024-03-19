@@ -5,12 +5,205 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
     tools:context=".MainActivity">
 
+
+    <!-- ". 0 =" -->
+
+
+    <Button
+        android:id="@+id/pointButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="."
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/zeroButton" />
+
+    <Button
+        android:id="@+id/zeroButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/pointButton"
+        app:layout_constraintRight_toLeftOf="@id/equalButton" />
+
+
+    <Button
+        android:id="@+id/equalButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="="
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/zeroButton"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <!-- "1 2 3 +" -->
+
+    <Button
+        android:id="@+id/oneButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="1"
+        app:layout_constraintBottom_toTopOf="@id/pointButton"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/twoButton"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <Button
+        android:id="@+id/twoButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="2"
+        app:layout_constraintBottom_toTopOf="@id/zeroButton"
+        app:layout_constraintLeft_toRightOf="@+id/oneButton"
+        app:layout_constraintRight_toRightOf="@id/threeButton" />
+
+    <Button
+        android:id="@+id/threeButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="3"
+        app:layout_constraintBottom_toTopOf="@id/zeroButton"
+        app:layout_constraintLeft_toRightOf="@+id/twoButton"
+        app:layout_constraintRight_toLeftOf="@id/plusButton" />
+
+    <Button
+        android:id="@+id/plusButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="+"
+        app:layout_constraintBottom_toTopOf="@id/equalButton"
+        app:layout_constraintLeft_toRightOf="@+id/zeroButton"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <!-- "4 5 6 -" -->
+
+    <Button
+        android:id="@+id/fourButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="4"
+        app:layout_constraintBottom_toTopOf="@id/oneButton"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="@+id/oneButton" />
+
+
+    <Button
+        android:id="@+id/fiveButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="5"
+        app:layout_constraintBottom_toTopOf="@id/twoButton"
+        app:layout_constraintLeft_toRightOf="@id/fourButton"
+        app:layout_constraintRight_toRightOf="@+id/twoButton" />
+
+    <Button
+        android:id="@+id/sixButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="6"
+        app:layout_constraintBottom_toTopOf="@id/threeButton"
+        app:layout_constraintLeft_toRightOf="@id/fiveButton"
+        app:layout_constraintRight_toRightOf="@+id/threeButton" />
+
+    <Button
+        android:id="@+id/minusButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="-"
+        app:layout_constraintBottom_toTopOf="@id/plusButton"
+        app:layout_constraintLeft_toLeftOf="@id/plusButton"
+        app:layout_constraintRight_toRightOf="parent" />
+
+
+    <!-- "7 8 9 *" -->
+
+    <Button
+        android:id="@+id/sevenButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="7"
+        app:layout_constraintBottom_toTopOf="@id/fourButton"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="@+id/oneButton" />
+
+    <Button
+        android:id="@+id/eightButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="8"
+        app:layout_constraintBottom_toTopOf="@id/fiveButton"
+        app:layout_constraintLeft_toRightOf="@id/fourButton"
+        app:layout_constraintRight_toRightOf="@+id/twoButton" />
+
+    <Button
+        android:id="@+id/nineButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="9"
+        app:layout_constraintBottom_toTopOf="@id/sixButton"
+        app:layout_constraintLeft_toLeftOf="@id/sixButton"
+        app:layout_constraintRight_toRightOf="@+id/threeButton" />
+
+
+    <Button
+        android:id="@+id/multiplyButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="*"
+        app:layout_constraintBottom_toTopOf="@id/minusButton"
+        app:layout_constraintLeft_toLeftOf="@id/minusButton"
+        app:layout_constraintRight_toRightOf="@+id/minusButton" />
+
+
+    <!-- "C <- % /" -->
+
+    <Button
+        android:id="@+id/deleteAllButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="C"
+        app:layout_constraintBottom_toTopOf="@id/sevenButton"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="@id/sevenButton" />
+
+    <Button
+        android:id="@+id/backSpaceButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="last"
+        app:layout_constraintBottom_toTopOf="@id/eightButton"
+        app:layout_constraintLeft_toLeftOf="@id/eightButton"
+        app:layout_constraintRight_toRightOf="@id/eightButton" />
+
+    <Button
+        android:id="@+id/percentButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="%"
+        app:layout_constraintBottom_toTopOf="@id/nineButton"
+        app:layout_constraintLeft_toLeftOf="@id/nineButton"
+        app:layout_constraintRight_toRightOf="@id/nineButton" />
+
+    <Button
+        android:id="@+id/divideButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="/"
+        app:layout_constraintBottom_toTopOf="@id/multiplyButton"
+        app:layout_constraintLeft_toLeftOf="@id/multiplyButton"
+        app:layout_constraintRight_toRightOf="@id/multiplyButton" />
+
+    <!-- /////////////// -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:text="Calculator"
+        android:textColor="@android:color/holo_green_light"
+        android:textSize="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
