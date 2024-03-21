@@ -1,12 +1,15 @@
 package com.example.calculator
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.ReportFragment.Companion.reportFragment
 import com.ezylang.evalex.Expression
 
 class MainActivity : AppCompatActivity() {
@@ -35,7 +38,7 @@ class MainActivity : AppCompatActivity() {
         val backSpaceButton: Button = findViewById(R.id.backSpaceButton)
         val deleteAllButton: Button = findViewById(R.id.deleteAllButton)
 
-        val resultTextView : TextView = findViewById(R.id.resultTextView)
+        val resultTextView: TextView = findViewById(R.id.resultTextView)
 
         val numberStringBuilder: StringBuilder = StringBuilder()
 
@@ -143,15 +146,38 @@ class MainActivity : AppCompatActivity() {
 
             if (numberStringBuilder.isEmpty()) {
                 numberStringBuilder.isEmpty()
-            }else{
-                val expression : Expression = Expression(numberStringBuilder.toString())
-                val expressionResult  = expression.evaluate().stringValue
+            } else {
+                try {
+                    val expression: Expression = Expression(numberStringBuilder.toString())
+                    val expressionResult = expression.evaluate().stringValue
 
-                numberStringBuilder.clear().append(expressionResult)
 
-                resultTextView.text = expressionResult
+                    numberStringBuilder.clear().append(expressionResult)
+
+                    resultTextView.text = expressionResult
+                } catch (t: Throwable) {
+                    Toast.makeText(
+                        this@MainActivity, "Exception $t",
+                        Toast.LENGTH_LONG
+                    ).show()
+
+                    if (t.message == "Division by zero") {
+
+                        numberStringBuilder.clear().append("You can't divide by zero")
+                        resultTextView.text = numberStringBuilder
+                        numberStringBuilder.clear()
+
+                    } else if (t.message == "Number contains more than one decimal point") {
+
+                        numberStringBuilder.clear().append(
+                            "Number contains more than one decimal point"
+                        )
+                        resultTextView.text = numberStringBuilder
+                        numberStringBuilder.clear()
+                    }
+                }
+
             }
-
         }
     }
 }
