@@ -37,6 +37,7 @@ android {
 
 dependencies {
 
+    implementation("com.ezylang:EvalEx:3.1.2")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
