@@ -17,13 +17,20 @@ import com.ezylang.evalex.Expression
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    override fun onCreate(savedInstanceState: Bundle?) = with(binding) {
+    private val numberStringBuilder: StringBuilder = StringBuilder()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
 
-        val numberStringBuilder: StringBuilder = StringBuilder()
+        setListener()
+
+
+    }
+
+    private fun setListener() = with(binding) {
 
         oneButton.setOnClickListener {
             numberStringBuilder.append(1)
@@ -106,7 +113,7 @@ class MainActivity : AppCompatActivity() {
             resultTextView.text = numberStringBuilder
         }
 
-       backSpaceButton.setOnClickListener {
+        backSpaceButton.setOnClickListener {
             val lastIndex: Int = numberStringBuilder.indices.last
 
             if (lastIndex >= 0) {
@@ -127,40 +134,47 @@ class MainActivity : AppCompatActivity() {
 
         equalButton.setOnClickListener {
 
-            if (numberStringBuilder.isEmpty()) {
-                numberStringBuilder.isEmpty()
-            } else {
-                try {
-                    val expression = Expression(numberStringBuilder.toString())
-                    val expressionResult = expression.evaluate().stringValue
+            calculate()
+
+        }
 
 
-                    numberStringBuilder.clear().append(expressionResult)
+    }
+    private fun ActivityMainBinding.calculate() {
 
-                    resultTextView.text = expressionResult
-                } catch (t: Throwable) {
-                    Toast.makeText(
-                        this@MainActivity, "Exception $t",
-                        Toast.LENGTH_LONG
-                    ).show()
+        if (numberStringBuilder.isEmpty()) {
+            numberStringBuilder.isEmpty()
+        } else {
+            try {
+                val expression = Expression(numberStringBuilder.toString())
+                val expressionResult = expression.evaluate().stringValue
 
-                    if (t.message == "Division by zero") {
 
-                        numberStringBuilder.clear().append("You can't divide by zero")
-                        resultTextView.text = numberStringBuilder
-                        numberStringBuilder.clear()
+                numberStringBuilder.clear().append(expressionResult)
 
-                    } else if (t.message == "Number contains more than one decimal point") {
+                resultTextView.text = expressionResult
+            } catch (t: Throwable) {
+                Toast.makeText(
+                    this@MainActivity, "Exception $t",
+                    Toast.LENGTH_LONG
+                ).show()
 
-                        numberStringBuilder.clear().append(
-                            "Number contains more than one decimal point"
-                        )
-                        resultTextView.text = numberStringBuilder
-                        numberStringBuilder.clear()
-                    }
+                if (t.message == "Division by zero") {
+
+                    numberStringBuilder.clear().append("You can't divide by zero")
+                    resultTextView.text = numberStringBuilder
+                    numberStringBuilder.clear()
+
+                } else if (t.message == "Number contains more than one decimal point") {
+
+                    numberStringBuilder.clear().append(
+                        "Number contains more than one decimal point"
+                    )
+                    resultTextView.text = numberStringBuilder
+                    numberStringBuilder.clear()
                 }
-
             }
         }
+
     }
 }
