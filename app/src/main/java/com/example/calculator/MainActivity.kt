@@ -1,5 +1,6 @@
 package com.example.calculator
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.ActionMenuView
@@ -18,6 +19,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val numberStringBuilder: StringBuilder = StringBuilder()
+    private val calculationHistory: MutableList<String> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,33 +86,37 @@ class MainActivity : AppCompatActivity() {
         }
 
         pointButton.setOnClickListener {
-            numberStringBuilder.append(".")
-            resultTextView.text = numberStringBuilder
+
+            val checkList: MutableList<String> = mutableListOf("/", "*", "-", "+", "%")
+
+            val regex = checkList.joinToString(separator = "|") { Regex.escape(it) }
+
+            val parts = numberStringBuilder.toString().split(Regex(regex))
+
+            if ("." !in parts.last()) {
+                numberStringBuilder.append(".")
+                resultTextView.text = numberStringBuilder
+            }
         }
 
         plusButton.setOnClickListener {
-            numberStringBuilder.append("+")
-            resultTextView.text = numberStringBuilder
+            checkingRepeatedCharacters("+")
         }
 
         minusButton.setOnClickListener {
-            numberStringBuilder.append("-")
-            resultTextView.text = numberStringBuilder
+            checkingRepeatedCharacters("-")
         }
 
         multiplyButton.setOnClickListener {
-            numberStringBuilder.append("*")
-            resultTextView.text = numberStringBuilder
+            checkingRepeatedCharacters("*")
         }
 
         divideButton.setOnClickListener {
-            numberStringBuilder.append("/")
-            resultTextView.text = numberStringBuilder
+            checkingRepeatedCharacters("")
         }
 
         percentButton.setOnClickListener {
-            numberStringBuilder.append("%")
-            resultTextView.text = numberStringBuilder
+            checkingRepeatedCharacters("%")
         }
 
         backSpaceButton.setOnClickListener {
@@ -138,8 +144,36 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+        historyButton.setOnClickListener {
+            val intent = Intent(this@MainActivity, HistoryActivity::class.java)
+
+            intent.putExtra("history_list", calculationHistory.toTypedArray())
+
+            startActivity(intent)
+        }
+
 
     }
+
+    private fun ActivityMainBinding.checkingRepeatedCharacters(characters: String) {
+
+        val checkList: MutableList<String> = mutableListOf("/", "*", "-", "+", "%")
+
+        checkList.remove(characters)
+
+        if (numberStringBuilder.isNotEmpty()) {
+            if (numberStringBuilder.last().toString() in checkList || numberStringBuilder.last().toString() == characters) {
+                val lastIndex: Int = numberStringBuilder.indices.last()
+                numberStringBuilder.setCharAt(lastIndex, characters[0])
+                resultTextView.text = numberStringBuilder
+            } else {
+                numberStringBuilder.append(characters)
+                resultTextView.text = numberStringBuilder
+            }
+        }
+
+    }
+
     private fun ActivityMainBinding.calculate() {
 
         if (numberStringBuilder.isEmpty()) {
@@ -148,6 +182,8 @@ class MainActivity : AppCompatActivity() {
             try {
                 val expression = Expression(numberStringBuilder.toString())
                 val expressionResult = expression.evaluate().stringValue
+
+                saveToHistory(numberStringBuilder.toString())
 
 
                 numberStringBuilder.clear().append(expressionResult)
@@ -176,5 +212,15 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    private fun saveToHistory(story: String) {
+
+        if (calculationHistory.size > 10) {
+            calculationHistory.removeAt(0)
+            calculationHistory.add(story)
+        } else {
+            calculationHistory.add(story)
+        }
     }
 }
