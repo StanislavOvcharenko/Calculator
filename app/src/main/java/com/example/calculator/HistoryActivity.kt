@@ -2,6 +2,8 @@ package com.example.calculator
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.ArrayAdapter
+import android.widget.ListView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -23,25 +25,14 @@ class HistoryActivity : AppCompatActivity() {
         val historyList: Array<String> =
             intent.getStringArrayExtra("history_list") ?: arrayOf()
 
-        Log.d("HistoryActivity" , "hitory size ${historyList.size}")
+        val itemAdapter: ArrayAdapter<String> =
+            ArrayAdapter(this, android.R.layout.simple_list_item_1, historyList)
 
-        textHistory(historyList.toList())
+        val listView = findViewById<ListView>(R.id.historyListView) as ListView
 
-
-    }
-
-    private fun textHistory(list : List<String>) = with(binding) {
-
-        val historyText  = StringBuilder()
-
-        for ( text in list ) {
-
-            historyText.append("$text \n")
-        }
-
-        historyCalculationText.text = historyText
-        }
-
-
+        listView.adapter = itemAdapter
 
     }
+
+
+}
