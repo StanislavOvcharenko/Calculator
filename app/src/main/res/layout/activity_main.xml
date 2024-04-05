@@ -16,8 +16,8 @@
         android:id="@+id/pointButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        android:backgroundTint="@android:color/holo_green_light"
+        android:textColor="#FF5722"
+        android:backgroundTint="#757575"
         android:text="."
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -236,6 +236,19 @@
         app:layout_constraintLeft_toLeftOf="@id/multiplyButton"
         app:layout_constraintRight_toRightOf="@id/multiplyButton" />
 
+    <!--History-->
+
+    <Button
+        android:id="@+id/historyButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#FFC107"
+        android:textColor="@color/black"
+        android:text="History"
+        app:layout_constraintBottom_toTopOf="@id/deleteAllButton"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="@id/eightButton" />
+    
     <!-- /////////////// -->
     <TextView
         android:id="@+id/resultTextView"
@@ -244,7 +257,7 @@
         android:text=""
         android:textColor="@android:color/holo_green_light"
         android:textSize="50sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/historyButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

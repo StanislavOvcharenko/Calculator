@@ -7,6 +7,10 @@ android {
     namespace = "com.example.calculator"
     compileSdk = 34
 
+    buildFeatures {
+        viewBinding = true
+    }
+
     defaultConfig {
         applicationId = "com.example.calculator"
         minSdk = 24
@@ -33,6 +37,8 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+
 }
 
 dependencies {

@@ -1,43 +1,38 @@
 package com.example.calculator
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.widget.ActionMenuView
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.ReportFragment.Companion.reportFragment
+import com.example.calculator.databinding.ActivityMainBinding
 import com.ezylang.evalex.Expression
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityMainBinding
+    private val numberStringBuilder: StringBuilder = StringBuilder()
+    private val calculationHistory: MutableList<String> = mutableListOf()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
 
-        val zeroButton: Button = findViewById(R.id.zeroButton)
-        val oneButton: Button = findViewById(R.id.oneButton)
-        val twoButton: Button = findViewById(R.id.twoButton)
-        val threeButton: Button = findViewById(R.id.threeButton)
-        val fourButton: Button = findViewById(R.id.fourButton)
-        val fiveButton: Button = findViewById(R.id.fiveButton)
-        val sixButton: Button = findViewById(R.id.sixButton)
-        val sevenButton: Button = findViewById(R.id.sevenButton)
-        val eightButton: Button = findViewById(R.id.eightButton)
-        val nineButton: Button = findViewById(R.id.nineButton)
+        setListener()
 
-        val equalButton: Button = findViewById(R.id.equalButton)
-        val pointButton: Button = findViewById(R.id.pointButton)
-        val plusButton: Button = findViewById(R.id.plusButton)
-        val minusButton: Button = findViewById(R.id.minusButton)
-        val multiplyButton: Button = findViewById(R.id.multiplyButton)
-        val divideButton: Button = findViewById(R.id.divideButton)
-        val percentButton: Button = findViewById(R.id.percentButton)
-        val backSpaceButton: Button = findViewById(R.id.backSpaceButton)
-        val deleteAllButton: Button = findViewById(R.id.deleteAllButton)
 
-        val resultTextView : TextView = findViewById(R.id.resultTextView)
+    }
 
-        val numberStringBuilder: StringBuilder = StringBuilder()
+    private fun setListener() = with(binding) {
 
         oneButton.setOnClickListener {
             numberStringBuilder.append(1)
@@ -91,33 +86,37 @@ class MainActivity : AppCompatActivity() {
         }
 
         pointButton.setOnClickListener {
-            numberStringBuilder.append(".")
-            resultTextView.text = numberStringBuilder
+
+            val checkList: MutableList<String> = mutableListOf("/", "*", "-", "+", "%")
+
+            val regex = checkList.joinToString(separator = "|") { Regex.escape(it) }
+
+            val parts = numberStringBuilder.toString().split(Regex(regex))
+
+            if ("." !in parts.last()) {
+                numberStringBuilder.append(".")
+                resultTextView.text = numberStringBuilder
+            }
         }
 
         plusButton.setOnClickListener {
-            numberStringBuilder.append("+")
-            resultTextView.text = numberStringBuilder
+            checkingRepeatedCharacters("+")
         }
 
         minusButton.setOnClickListener {
-            numberStringBuilder.append("-")
-            resultTextView.text = numberStringBuilder
+            checkingRepeatedCharacters("-")
         }
 
         multiplyButton.setOnClickListener {
-            numberStringBuilder.append("*")
-            resultTextView.text = numberStringBuilder
+            checkingRepeatedCharacters("*")
         }
 
         divideButton.setOnClickListener {
-            numberStringBuilder.append("/")
-            resultTextView.text = numberStringBuilder
+            checkingRepeatedCharacters("")
         }
 
         percentButton.setOnClickListener {
-            numberStringBuilder.append("%")
-            resultTextView.text = numberStringBuilder
+            checkingRepeatedCharacters("%")
         }
 
         backSpaceButton.setOnClickListener {
@@ -141,17 +140,87 @@ class MainActivity : AppCompatActivity() {
 
         equalButton.setOnClickListener {
 
-            if (numberStringBuilder.isEmpty()) {
-                numberStringBuilder.isEmpty()
-            }else{
-                val expression : Expression = Expression(numberStringBuilder.toString())
-                val expressionResult  = expression.evaluate().stringValue
+            calculate()
+
+        }
+
+        historyButton.setOnClickListener {
+            val intent = Intent(this@MainActivity, HistoryActivity::class.java)
+
+            intent.putExtra("history_list", calculationHistory.toTypedArray())
+
+            startActivity(intent)
+        }
+
+
+    }
+
+    private fun ActivityMainBinding.checkingRepeatedCharacters(characters: String) {
+
+        val checkList: MutableList<String> = mutableListOf("/", "*", "-", "+", "%")
+
+        checkList.remove(characters)
+
+        if (numberStringBuilder.isNotEmpty()) {
+            if (numberStringBuilder.last().toString() in checkList || numberStringBuilder.last().toString() == characters) {
+                val lastIndex: Int = numberStringBuilder.indices.last()
+                numberStringBuilder.setCharAt(lastIndex, characters[0])
+                resultTextView.text = numberStringBuilder
+            } else {
+                numberStringBuilder.append(characters)
+                resultTextView.text = numberStringBuilder
+            }
+        }
+
+    }
+
+    private fun ActivityMainBinding.calculate() {
+
+        if (numberStringBuilder.isEmpty()) {
+            numberStringBuilder.isEmpty()
+        } else {
+            try {
+                val expression = Expression(numberStringBuilder.toString())
+                val expressionResult = expression.evaluate().stringValue
+
+                saveToHistory(numberStringBuilder.toString())
+
 
                 numberStringBuilder.clear().append(expressionResult)
 
                 resultTextView.text = expressionResult
-            }
+            } catch (t: Throwable) {
+                Toast.makeText(
+                    this@MainActivity, "Exception $t",
+                    Toast.LENGTH_LONG
+                ).show()
 
+                if (t.message == "Division by zero") {
+
+                    numberStringBuilder.clear().append("You can't divide by zero")
+                    resultTextView.text = numberStringBuilder
+                    numberStringBuilder.clear()
+
+                } else if (t.message == "Number contains more than one decimal point") {
+
+                    numberStringBuilder.clear().append(
+                        "Number contains more than one decimal point"
+                    )
+                    resultTextView.text = numberStringBuilder
+                    numberStringBuilder.clear()
+                }
+            }
+        }
+
+    }
+
+    private fun saveToHistory(story: String) {
+
+        if (calculationHistory.size > 10) {
+            calculationHistory.removeAt(0)
+            calculationHistory.add(story)
+        } else {
+            calculationHistory.add(story)
         }
     }
 }
